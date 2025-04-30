@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
@@ -93,4 +94,21 @@
 
 .heart-beat {
   animation: heartBeat 1s;
+}
+
+/* Animação para clique nos itens do menu */
+@keyframes pulseItem {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.menu-item-appear:active {
+  animation: pulseItem 0.3s;
 }

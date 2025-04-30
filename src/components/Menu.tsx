@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FoodRating from './FoodRating';
+import FoodDetails from './FoodDetails';
 
 interface MenuItem {
   id: number;
@@ -14,6 +15,8 @@ interface MenuItem {
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState("mains");
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   
   const menuItems: Record<string, MenuItem[]> = {
     starters: [
@@ -34,6 +37,15 @@ const Menu = () => {
       { id: 11, name: "Chocolate Lava Cake", description: "Warm chocolate cake with a molten center, served with vanilla ice cream", price: "$14", likes: 52 },
       { id: 12, name: "Seasonal Fruit Tart", description: "Buttery pastry with vanilla custard and fresh seasonal fruits", price: "$11", likes: 33 }
     ]
+  };
+
+  const handleItemClick = (item: MenuItem) => {
+    setSelectedItem(item);
+    setIsDetailsOpen(true);
+  };
+
+  const handleCloseDetails = () => {
+    setIsDetailsOpen(false);
   };
 
   return (
@@ -73,7 +85,11 @@ const Menu = () => {
             <TabsContent key={category} value={category} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-8">
                 {menuItems[category].map((item) => (
-                  <div key={item.id} className="menu-item-appear border-b pb-6">
+                  <div 
+                    key={item.id} 
+                    className="menu-item-appear border-b pb-6 cursor-pointer hover:bg-secondary/50 p-3 rounded-md transition-colors"
+                    onClick={() => handleItemClick(item)}
+                  >
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-heading text-xl font-bold text-restaurant-brown flex items-center gap-2">
                         {item.name}
@@ -84,13 +100,21 @@ const Menu = () => {
                       <span className="font-heading text-xl font-bold text-restaurant-gold">{item.price}</span>
                     </div>
                     <p className="text-gray-600 mb-3">{item.description}</p>
-                    <FoodRating itemId={item.id} initialLikes={item.likes} />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <FoodRating itemId={item.id} initialLikes={item.likes} />
+                    </div>
                   </div>
                 ))}
               </div>
             </TabsContent>
           ))}
         </Tabs>
+        
+        <FoodDetails 
+          isOpen={isDetailsOpen} 
+          onClose={handleCloseDetails} 
+          item={selectedItem}
+        />
       </div>
     </section>
   );
