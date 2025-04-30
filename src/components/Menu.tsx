@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import FoodRating from './FoodRating';
 
 interface MenuItem {
   id: number;
@@ -8,6 +9,7 @@ interface MenuItem {
   description: string;
   price: string;
   popular?: boolean;
+  likes?: number;
 }
 
 const Menu = () => {
@@ -15,22 +17,22 @@ const Menu = () => {
   
   const menuItems: Record<string, MenuItem[]> = {
     starters: [
-      { id: 1, name: "Caprese Salad", description: "Fresh mozzarella, tomatoes, and basil drizzled with balsamic glaze", price: "$12" },
-      { id: 2, name: "Garlic Prawns", description: "Sautéed prawns with garlic, chili, and herb butter", price: "$16", popular: true },
-      { id: 3, name: "Wild Mushroom Bruschetta", description: "Toasted sourdough with creamy wild mushrooms and truffle oil", price: "$14" },
-      { id: 4, name: "Beef Carpaccio", description: "Thinly sliced raw beef with capers, arugula, and parmesan", price: "$18" }
+      { id: 1, name: "Caprese Salad", description: "Fresh mozzarella, tomatoes, and basil drizzled with balsamic glaze", price: "$12", likes: 24 },
+      { id: 2, name: "Garlic Prawns", description: "Sautéed prawns with garlic, chili, and herb butter", price: "$16", popular: true, likes: 42 },
+      { id: 3, name: "Wild Mushroom Bruschetta", description: "Toasted sourdough with creamy wild mushrooms and truffle oil", price: "$14", likes: 18 },
+      { id: 4, name: "Beef Carpaccio", description: "Thinly sliced raw beef with capers, arugula, and parmesan", price: "$18", likes: 31 }
     ],
     mains: [
-      { id: 5, name: "Filet Mignon", description: "8oz beef tenderloin with red wine reduction and truffle mashed potatoes", price: "$38", popular: true },
-      { id: 6, name: "Herb-Crusted Salmon", description: "Atlantic salmon with lemon butter sauce and seasonal vegetables", price: "$29" },
-      { id: 7, name: "Wild Mushroom Risotto", description: "Creamy arborio rice with assorted wild mushrooms and parmesan", price: "$24" },
-      { id: 8, name: "Roasted Duck Breast", description: "With orange-cranberry sauce and root vegetable puree", price: "$34", popular: true }
+      { id: 5, name: "Filet Mignon", description: "8oz beef tenderloin with red wine reduction and truffle mashed potatoes", price: "$38", popular: true, likes: 56 },
+      { id: 6, name: "Herb-Crusted Salmon", description: "Atlantic salmon with lemon butter sauce and seasonal vegetables", price: "$29", likes: 37 },
+      { id: 7, name: "Wild Mushroom Risotto", description: "Creamy arborio rice with assorted wild mushrooms and parmesan", price: "$24", likes: 29 },
+      { id: 8, name: "Roasted Duck Breast", description: "With orange-cranberry sauce and root vegetable puree", price: "$34", popular: true, likes: 44 }
     ],
     desserts: [
-      { id: 9, name: "Tiramisu", description: "Classic Italian dessert with coffee-soaked ladyfingers and mascarpone", price: "$10" },
-      { id: 10, name: "Crème Brûlée", description: "Rich custard topped with caramelized sugar", price: "$12", popular: true },
-      { id: 11, name: "Chocolate Lava Cake", description: "Warm chocolate cake with a molten center, served with vanilla ice cream", price: "$14" },
-      { id: 12, name: "Seasonal Fruit Tart", description: "Buttery pastry with vanilla custard and fresh seasonal fruits", price: "$11" }
+      { id: 9, name: "Tiramisu", description: "Classic Italian dessert with coffee-soaked ladyfingers and mascarpone", price: "$10", likes: 38 },
+      { id: 10, name: "Crème Brûlée", description: "Rich custard topped with caramelized sugar", price: "$12", popular: true, likes: 49 },
+      { id: 11, name: "Chocolate Lava Cake", description: "Warm chocolate cake with a molten center, served with vanilla ice cream", price: "$14", likes: 52 },
+      { id: 12, name: "Seasonal Fruit Tart", description: "Buttery pastry with vanilla custard and fresh seasonal fruits", price: "$11", likes: 33 }
     ]
   };
 
@@ -81,7 +83,8 @@ const Menu = () => {
                       </h3>
                       <span className="font-heading text-xl font-bold text-restaurant-gold">{item.price}</span>
                     </div>
-                    <p className="text-gray-600">{item.description}</p>
+                    <p className="text-gray-600 mb-3">{item.description}</p>
+                    <FoodRating itemId={item.id} initialLikes={item.likes} />
                   </div>
                 ))}
               </div>
