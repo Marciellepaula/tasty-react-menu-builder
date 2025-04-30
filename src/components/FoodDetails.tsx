@@ -14,6 +14,7 @@ interface FoodDetailsProps {
     price: string;
     popular?: boolean;
     likes?: number;
+    image?: string;
     ingredients?: string[];
     nutritionalInfo?: {
       calories?: number;
@@ -29,7 +30,7 @@ interface FoodDetailsProps {
 const FoodDetails = ({ isOpen, onClose, item }: FoodDetailsProps) => {
   if (!item) return null;
 
-  // Dados fictícios para enriquecer a visualização
+  // Default data for enriched visualization
   const ingredients = item.ingredients || [
     "Ingredientes frescos de alta qualidade",
     "Ervas aromáticas selecionadas",
@@ -42,6 +43,16 @@ const FoodDetails = ({ isOpen, onClose, item }: FoodDetailsProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-md md:max-w-lg">
+        {item.image && (
+          <div className="h-48 overflow-hidden -mt-6 -mx-6 mb-4 rounded-t-lg">
+            <img 
+              src={item.image} 
+              alt={item.name} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+        
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-heading text-2xl text-restaurant-brown">
             {item.name}
