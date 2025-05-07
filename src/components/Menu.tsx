@@ -20,9 +20,9 @@ const Menu = () => {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const navigate = useNavigate();
-  
+
   const menuItems: Record<string, MenuItem[]> = {
-    starters: [
+    pizza: [
       { id: 1, name: "Caprese Salad", description: "Fresh mozzarella, tomatoes, and basil drizzled with balsamic glaze", price: "$12", likes: 24, image: "https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?q=80&w=1000" },
       { id: 2, name: "Garlic Prawns", description: "Sautéed prawns with garlic, chili, and herb butter", price: "$16", popular: true, likes: 42, image: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?q=80&w=1000" },
       { id: 3, name: "Wild Mushroom Bruschetta", description: "Toasted sourdough with creamy wild mushrooms and truffle oil", price: "$14", likes: 18, image: "https://images.unsplash.com/photo-1506280754576-f6fa8a873550?q=80&w=1000" },
@@ -34,7 +34,7 @@ const Menu = () => {
       { id: 7, name: "Wild Mushroom Risotto", description: "Creamy arborio rice with assorted wild mushrooms and parmesan", price: "$24", likes: 29, image: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?q=80&w=1000" },
       { id: 8, name: "Roasted Duck Breast", description: "With orange-cranberry sauce and root vegetable puree", price: "$34", popular: true, likes: 44, image: "https://images.unsplash.com/photo-1426869981800-95ebf51ce900?q=80&w=1000" }
     ],
-    desserts: [
+    massa: [
       { id: 9, name: "Tiramisu", description: "Classic Italian dessert with coffee-soaked ladyfingers and mascarpone", price: "$10", likes: 38, image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=1000" },
       { id: 10, name: "Crème Brûlée", description: "Rich custard topped with caramelized sugar", price: "$12", popular: true, likes: 49, image: "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?q=80&w=1000" },
       { id: 11, name: "Chocolate Lava Cake", description: "Warm chocolate cake with a molten center, served with vanilla ice cream", price: "$14", likes: 52, image: "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?q=80&w=1000" },
@@ -60,48 +60,48 @@ const Menu = () => {
     <section id="menu" className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="font-heading text-3xl md:text-4xl font-bold text-restaurant-brown mb-4">Our Menu</h2>
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-restaurant-brown mb-4">Nosso Cardápio</h2>
           <div className="w-24 h-1 bg-restaurant-gold mx-auto mb-6"></div>
           <p className="text-gray-600 max-w-3xl mx-auto">
-            Explore our carefully curated menu featuring seasonal ingredients and chef's specialties.
+            Explore nosso menu cuidadosamente elaborado com ingredientes sazonais e especialidades do chef.
           </p>
         </div>
 
         <Tabs defaultValue="mains" className="w-full max-w-5xl mx-auto">
           <TabsList className="grid grid-cols-3 mb-12">
-            <TabsTrigger 
-              value="starters" 
+            <TabsTrigger
+              value="starters"
               className="font-serif text-lg data-[state=active]:text-restaurant-gold data-[state=active]:border-b-2 data-[state=active]:border-restaurant-gold"
             >
-              Starters
+              Pizzas
             </TabsTrigger>
-            <TabsTrigger 
-              value="mains" 
+            <TabsTrigger
+              value="mains"
               className="font-serif text-lg data-[state=active]:text-restaurant-gold data-[state=active]:border-b-2 data-[state=active]:border-restaurant-gold"
             >
-              Main Courses
+              Pratos Principais
             </TabsTrigger>
-            <TabsTrigger 
-              value="desserts" 
+            <TabsTrigger
+              value="desserts"
               className="font-serif text-lg data-[state=active]:text-restaurant-gold data-[state=active]:border-b-2 data-[state=active]:border-restaurant-gold"
             >
-              Desserts
+              Massas
             </TabsTrigger>
           </TabsList>
-          
+
           {Object.keys(menuItems).map((category) => (
             <TabsContent key={category} value={category} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-8">
                 {menuItems[category].map((item) => (
-                  <div 
-                    key={item.id} 
+                  <div
+                    key={item.id}
                     className="menu-item-appear border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
                     onClick={() => handleItemClick(item)}
                   >
                     <div className="h-48 overflow-hidden">
-                      <img 
-                        src={item.image} 
-                        alt={item.name} 
+                      <img
+                        src={item.image}
+                        alt={item.name}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                       />
                     </div>
@@ -120,11 +120,11 @@ const Menu = () => {
                         <div onClick={(e) => e.stopPropagation()}>
                           <FoodRating itemId={item.id} initialLikes={item.likes} />
                         </div>
-                        <button 
-                          onClick={(e) => handleQuickView(e, item)} 
+                        <button
+                          onClick={(e) => handleQuickView(e, item)}
                           className="text-sm text-restaurant-gold hover:underline font-medium"
                         >
-                          Quick View
+                          Visão rápida
                         </button>
                       </div>
                     </div>
@@ -134,10 +134,10 @@ const Menu = () => {
             </TabsContent>
           ))}
         </Tabs>
-        
-        <FoodDetails 
-          isOpen={isDetailsOpen} 
-          onClose={handleCloseDetails} 
+
+        <FoodDetails
+          isOpen={isDetailsOpen}
+          onClose={handleCloseDetails}
           item={selectedItem}
         />
       </div>

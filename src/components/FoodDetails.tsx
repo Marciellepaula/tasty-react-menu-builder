@@ -39,20 +39,20 @@ const FoodDetails = ({ isOpen, onClose, item }: FoodDetailsProps) => {
 
   const allergens = item.allergens || ["Pode conter glúten", "Pode conter laticínios"];
   const prepTime = item.prepTime || "25-30 minutos";
-  
+
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-md md:max-w-lg">
         {item.image && (
           <div className="h-48 overflow-hidden -mt-6 -mx-6 mb-4 rounded-t-lg">
-            <img 
-              src={item.image} 
-              alt={item.name} 
+            <img
+              src={item.image}
+              alt={item.name}
               className="w-full h-full object-cover"
             />
           </div>
         )}
-        
+
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-heading text-2xl text-restaurant-brown">
             {item.name}
@@ -71,7 +71,7 @@ const FoodDetails = ({ isOpen, onClose, item }: FoodDetailsProps) => {
           <div className="bg-secondary/50 p-4 rounded-md">
             <p className="text-gray-700">{item.description}</p>
           </div>
-          
+
           <div>
             <h3 className="font-medium text-restaurant-brown mb-2">Ingredientes</h3>
             <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
@@ -80,13 +80,13 @@ const FoodDetails = ({ isOpen, onClose, item }: FoodDetailsProps) => {
               ))}
             </ul>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <h3 className="font-medium text-restaurant-brown mb-2">Informações</h3>
               <p className="text-gray-600">Tempo de preparo: {prepTime}</p>
             </div>
-            
+
             <div>
               <h3 className="font-medium text-restaurant-brown mb-2">Alergênicos</h3>
               <ul className="text-gray-600 space-y-1">
@@ -96,7 +96,7 @@ const FoodDetails = ({ isOpen, onClose, item }: FoodDetailsProps) => {
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t pt-4">
             <FoodRating itemId={item.id} initialLikes={item.likes} />
           </div>
