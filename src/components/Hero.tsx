@@ -7,7 +7,7 @@ const Hero = () => {
     <section id="home" className="relative h-[80vh] bg-black">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-70"
-        style={{ backgroundImage: "url('lasanha.jpg')" }}
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1559847844-5315695dadae?q=80&w=2340&fit=crop')" }}
       ></div>
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40"></div>
 
