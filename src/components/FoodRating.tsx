@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { Card, CardContent } from './ui/card';
 import { db } from '../lib/firebase';
-import { collection, doc, getDoc, getDocs, setDoc, addDoc, query, where, deleteDoc, updateDoc, increment, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc, addDoc, query, where, deleteDoc, serverTimestamp } from 'firebase/firestore';
 
 interface Comment {
   id: string;
@@ -60,10 +60,15 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
         // Get comments
         const commentsQuery = query(collection(db, 'comments'), where('itemId', '==', itemId));
         const commentsSnapshot = await getDocs(commentsQuery);
-        const commentsData = commentsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }) as Comment);
+        const commentsData = commentsSnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            text: data.text || '',
+            date: new Date(data.timestamp?.toDate() || new Date()).toLocaleString('pt-BR'),
+            author: data.author || 'Anônimo'
+          } as Comment;
+        });
         
         setComments(commentsData);
         
@@ -98,7 +103,7 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
         await setDoc(likeDocRef, {
           userId,
           itemId,
-          timestamp: new Date().toISOString()
+          timestamp: serverTimestamp()
         });
         setLikes(prev => prev + 1);
         setHasLiked(true);
@@ -131,9 +136,8 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
       const comment = {
         itemId,
         text: newComment.trim(),
-        date: new Date().toISOString(),
         author: authorName.trim(),
-        timestamp: new Date().toISOString()
+        timestamp: serverTimestamp()
       };
 
       const docRef = await addDoc(collection(db, 'comments'), comment);
