@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { Card, CardContent } from './ui/card';
 import { db } from '../lib/firebase';
-import { collection, doc, getDoc, getDocs, setDoc, addDoc, query, where, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc, addDoc, query, where, deleteDoc, updateDoc, increment, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 interface Comment {
   id: string;
@@ -46,32 +46,27 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
       setIsLoading(true);
       try {
         const userId = getUserId();
-        
+
         // Check if user has liked this item
         const likeDocRef = doc(db, 'likes', `${userId}_${itemId}`);
         const likeDoc = await getDoc(likeDocRef);
         setHasLiked(likeDoc.exists());
-        
+
         // Get likes count
         const likesQuery = query(collection(db, 'likes'), where('itemId', '==', itemId));
         const likesSnapshot = await getDocs(likesQuery);
         setLikes(likesSnapshot.size);
-        
+
         // Get comments
         const commentsQuery = query(collection(db, 'comments'), where('itemId', '==', itemId));
         const commentsSnapshot = await getDocs(commentsQuery);
-        const commentsData = commentsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            text: data.text || '',
-            date: new Date(data.timestamp?.toDate() || new Date()).toLocaleString('pt-BR'),
-            author: data.author || 'Anônimo'
-          } as Comment;
-        });
-        
+        const commentsData = commentsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }) as Comment);
+
         setComments(commentsData);
-        
+
         // Load previously used author name
         const savedAuthor = localStorage.getItem('commentAuthor') || '';
         setAuthorName(savedAuthor);
@@ -82,7 +77,7 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
         setIsLoading(false);
       }
     };
-    
+
     fetchData();
   }, [itemId]);
 
@@ -90,7 +85,7 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
     const userId = getUserId();
     const likeId = `${userId}_${itemId}`;
     const likeDocRef = doc(db, 'likes', likeId);
-    
+
     try {
       if (hasLiked) {
         // Remove like
@@ -103,7 +98,7 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
         await setDoc(likeDocRef, {
           userId,
           itemId,
-          timestamp: serverTimestamp()
+          timestamp: new Date().toISOString()
         });
         setLikes(prev => prev + 1);
         setHasLiked(true);
@@ -132,16 +127,16 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
 
     try {
       setIsLoading(true);
-      
+
       const comment = {
         itemId,
         text: newComment.trim(),
         author: authorName.trim(),
-        timestamp: serverTimestamp()
+        timestamp: new Date().toISOString()
       };
 
       const docRef = await addDoc(collection(db, 'comments'), comment);
-      
+
       const newCommentWithId: Comment = {
         id: docRef.id,
         text: comment.text,
@@ -178,7 +173,7 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
           </button>
           <span className="text-sm text-gray-500">{likes}</span>
         </div>
-        
+
         <button
           onClick={toggleComments}
           className="flex items-center gap-1.5 text-gray-500 hover:text-restaurant-gold transition-all"
@@ -231,9 +226,9 @@ const FoodRating = ({ itemId, initialLikes = 0, showCommentsByDefault = false }:
                   className="min-h-[60px] resize-none"
                   disabled={isLoading}
                 />
-                <Button 
-                  onClick={handleAddComment} 
-                  size="sm" 
+                <Button
+                  onClick={handleAddComment}
+                  size="sm"
                   className="w-full sm:w-auto bg-restaurant-gold hover:bg-restaurant-gold/90"
                   disabled={isLoading}
                 >
